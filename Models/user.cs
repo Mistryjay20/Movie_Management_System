@@ -14,6 +14,6 @@ namespace Movie_Management_System.Models
         public string City { get; set;}
         public int PhoneNo { get; set;}
 
-    }
+    
     }
 }
