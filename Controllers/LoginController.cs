@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -14,6 +15,15 @@ namespace Movie_Management_System.Controllers
         // GET: Login
         public ActionResult Index()
         {
+            if (Session["Email"] != null)
+            {
+                ViewBag.LoginSuccess = "Welcome " + Session["Email"].ToString();
+            }
+            else
+            {
+                ViewBag.LoginFailed = "Please Try Again Login Failed";
+            }
+
             return View();
         }
 
@@ -31,37 +41,33 @@ namespace Movie_Management_System.Controllers
 
         // POST: Login/Create
         [HttpPost]
-        public ActionResult Create(user user)
+        public ActionResult Create(login user)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    return View(user);
-                }
                 string connectionString = ConfigurationManager.ConnectionStrings["dbconnection"].ToString();
                 SqlConnection connection = new SqlConnection(connectionString);
-
-                SqlCommand cmd = new SqlCommand(connectionString, connection);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand("Get_User", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                connection.Open();
                 cmd.Parameters.AddWithValue("@Email_id", user.Email_id);
                 cmd.Parameters.AddWithValue("@User_password", user.User_password);
-                connection.Open();
-                SqlDataReader sdr = cmd.ExecuteReader();
-                if (sdr.Read())
+                int result = (int)cmd.ExecuteScalar();
+                if (result > 0)
                 {
-                    ViewBag.Email_id = sdr["Email_id"].ToString();
-                    ViewBag.User_Passowrd = sdr["user_password"].ToString();
-                    return View("index");
+                    Session["Email"] = user.Email_id;
+                    return RedirectToAction("Index");
                 }
-                ViewBag.Message = "Invaid";
-                return View(user);
-                // TODO: Add insert logic here
-
+                else
+                {
+                    ViewBag.Error = "Email or Password Invalid.";
+                    return View(user);
+                }
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                return View(user);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿@model Movie_Management_System.Models.user
+﻿@model Movie_Management_System.Models.login
 
 @{
     ViewBag.Title = "Create";
@@ -7,61 +7,43 @@
 
 <h2>Create</h2>
 
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>login</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email_id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email_id, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.User_password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.User_password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.User_password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
 <div>
-    <h4>user</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.User_id)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.User_id)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.User_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.User_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Email_id)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Email_id)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.User_password)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.User_password)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.City)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PhoneNo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PhoneNo)
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     @Html.ActionLink("Back to List", "Index")
-</p>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
