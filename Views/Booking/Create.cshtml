@@ -1,0 +1,112 @@
+﻿@model Movie_Management_System.Models.Booking
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.Message
+    </div>
+}
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.Error
+    </div>
+}
+<h2>Ticket Booking</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.booking_id, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.booking_id, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.booking_id, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.user_id, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.user_id, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.user_id, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cat_id, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.cat_id, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.cat_id, "", new { @class = "text-danger" })*@
+
+                <select id="cat_id" name="cat_id" class="form-control" onchange="window.location.href='@Url.Action("Create", "Booking")?cat_id=' + this.value;">
+                    @if (ViewBag.CategoryList != null)
+                    {
+                        <option value="">--Select Category--</option>
+                        foreach (var item in ViewBag.CategoryList)
+                        {
+                            <option value="@item.Value" @(item.Value == Model.Cat_id.ToString() ? "selected" : "")>
+                                @item.Text
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Movie_id, "Movies", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.movie_id, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.movie_id, "", new { @class = "text-danger" })*@
+                <select id="movie_id" name="movie_id" class="form-control" onchange="window.location.href='@Url.Action("Create", "Booking")?cat_id=@Model.Cat_id&movie_id=' + this.value;">
+                    @if (ViewBag.MovieList != null)
+                    {
+                        <option value="">--Select Movie--</option>
+                        foreach (var item in ViewBag.MovieList)
+                        {
+                            <option value="@item.Value" @(item.Value == Model.Movie_id.ToString() ? "Selected" : "")>@item.Text </option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.No_of_Tickets, "Number Of Ticket", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="number" id="no_of_ticket" name="no_of_ticket" class="form-control" value="@Model.No_of_Tickets" onchange="window.location.href='@Url.Action("Create", "Booking")?cat_id=@Model.Cat_id&movie_id=@Model.Movie_id&no_of_ticket=' + this.value;" />
+                @Html.ValidationMessageFor(model => model.No_of_Tickets, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.amount, "Total Price", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.amount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.amount, "", new { @class = "text-danger" })*@
+                <input type="text" class="form-control" value="@ViewBag.TotalPrice" disabled />
+                <input type="hidden" name="amount" value="@Model.amount" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

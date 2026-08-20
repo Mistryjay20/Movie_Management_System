@@ -47,7 +47,7 @@ namespace Movie_Management_System.Controllers
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["dbconnection"].ToString();
                 SqlConnection connection = new SqlConnection(connectionString);
-                SqlCommand cmd = new SqlCommand("Get_User", connection);
+                SqlCommand cmd = new SqlCommand("Pro_log", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 connection.Open();
                 cmd.Parameters.AddWithValue("@Email_id", user.Email_id);
@@ -56,7 +56,7 @@ namespace Movie_Management_System.Controllers
                 if (result > 0)
                 {
                     Session["Email"] = user.Email_id;
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Create", "Booking");
                 }
                 else
                 {
