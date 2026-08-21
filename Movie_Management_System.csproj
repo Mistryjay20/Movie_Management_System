@@ -195,6 +195,7 @@
     <Content Include="Views\Movie\Create.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Booking\Create.cshtml" />
+    <Content Include="Views\Booking\Details.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -56,7 +56,7 @@ namespace Movie_Management_System.Controllers
                 if (result > 0)
                 {
                     Session["Email"] = user.Email_id;
-                    return RedirectToAction("Create", "Booking");
+                    return RedirectToAction("Details", "Booking");
                 }
                 else
                 {
