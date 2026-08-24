@@ -87,15 +87,16 @@ namespace Movie_Management_System.Controllers
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                bookings.Add(new Booking
-                {
-                    Booking_id = Convert.ToInt32(reader[booking.Booking_id]),
-                    User_id = Convert.ToInt32(reader[booking.User_id]),
-                    Cat_id = Convert.ToInt32(reader[booking.Cat_id]),
-                    Movie_id = Convert.ToInt32(reader[booking.Movie_id]),
-                    No_of_Tickets = Convert.ToInt32(reader[booking.No_of_Tickets]),
-                    amount = Convert.ToInt32(reader[booking.amount])
-                });
+                booking = new Booking();
+
+                booking.Booking_id = Convert.ToInt32(reader["Booking_id"]);
+                booking.User_id = Convert.ToInt32(reader["User_id"]);
+                booking.Cat_type = Convert.ToString(reader["Cat_type"]);
+                booking.Movie_name = Convert.ToString(reader["Movie_name"]);
+                booking.No_of_Tickets = Convert.ToInt32(reader["No_of_Tickets"]);
+                booking.amount = Convert.ToInt32(reader["amount"]);
+
+                bookings.Add(booking);
             }
             reader.Close();
             connection.Close();
