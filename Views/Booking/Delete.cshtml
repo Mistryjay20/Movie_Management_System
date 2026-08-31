@@ -1,0 +1,89 @@
+﻿@model Movie_Management_System.Models.Booking
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Booking</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Booking_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Booking_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cat_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cat_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cat_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cat_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Movie_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Movie_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Movie_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Movie_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.No_of_Tickets)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.No_of_Tickets)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.amount)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

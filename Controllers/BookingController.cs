@@ -192,46 +192,181 @@ namespace Movie_Management_System.Controllers
         }
 
         // GET: Booking/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, int? cat_id, int? movie_id, int? no_of_ticket)
         {
-            return View();
+            Booking book = new Booking();
+            string connectionString = ConfigurationManager.ConnectionStrings["dbconnection"].ToString();
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand cmd = new SqlCommand("Get_Booking_ById", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Booking_id", id);
+
+            connection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                book.Booking_id = Convert.ToInt32(reader["Booking_id"]);
+                book.User_id = Convert.ToInt32(reader["User_id"]);
+                book.Cat_id = Convert.ToInt32(reader["Cat_id"]);
+                book.Movie_id = Convert.ToInt32(reader["Movie_id"]);
+                book.No_of_Tickets = Convert.ToInt32(reader["No_of_Tickets"]);
+                book.amount = Convert.ToInt32(reader["Amount"]);
+            }
+
+            reader.Close();
+            connection.Close();
+
+            List<SelectListItem> list = new List<SelectListItem>();
+
+            connection = new SqlConnection(connectionString);
+            cmd = new SqlCommand("Bind_Category", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            connection.Open();
+            reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                list.Add(new SelectListItem
+                {
+                    Value = reader["Cat_id"].ToString(),
+                    Text = reader["Cat_Type"].ToString()
+                });
+            }
+
+            reader.Close();
+            connection.Close();
+
+            ViewBag.CategoryList = list;
+
+            if (cat_id != null)
+            {
+                book.Cat_id = cat_id.Value;
+            }
+
+            if (movie_id != null)
+            {
+                book.Movie_id = movie_id.Value;
+            }
+
+            if (no_of_ticket != null)
+            {
+                book.No_of_Tickets = no_of_ticket.Value;
+            }
+
+            ViewBag.MovieList = new List<SelectListItem>();
+
+            if (book.Cat_id != 0)
+            {
+                ViewBag.MovieList = Bind_Movie(book.Cat_id);
+            }
+
+            if (movie_id != null && no_of_ticket != null)
+            {
+                book.amount = Calculate_Price(movie_id.Value, no_of_ticket.Value);
+                ViewBag.TotalPrice = book.amount;
+            }
+            else
+            {
+                ViewBag.TotalPrice = book.amount;
+            }
+
+            return View(book);
         }
 
         // POST: Booking/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(Booking book)
         {
             try
             {
-                // TODO: Add update logic here
+                if (ModelState.IsValid)
+                {
+                    string connectionString = ConfigurationManager.ConnectionStrings["dbconnection"].ToString();
+                    SqlConnection connection = new SqlConnection(connectionString);
+                    SqlCommand cmd = new SqlCommand("Update_Booking", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@Booking_id", book.Booking_id);
+                    cmd.Parameters.AddWithValue("@User_id", Get_User_id());
+                    cmd.Parameters.AddWithValue("@Cat_id", book.Cat_id);
+                    cmd.Parameters.AddWithValue("@Movie_id", book.Movie_id);
+                    cmd.Parameters.AddWithValue("@no_of_Tickets", book.No_of_Tickets);
+                    cmd.Parameters.AddWithValue("@amount", book.amount);
+                    int i = cmd.ExecuteNonQuery();
+                    connection.Close();
+                    if (i > 0)
+                    {
+                        ViewBag.Message = "Booking Update Successfully";
+                        return View(book);
+                    }
+                }
 
-                return RedirectToAction("Index");
+                return View(book);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.Error = ex + " Updation Failed";
+                return View(book);
             }
         }
 
         // GET: Booking/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Booking book = new Booking();
+            string connectionString = ConfigurationManager.ConnectionStrings["dbconnection"].ToString();
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand cmd = new SqlCommand("Get_Booking_ById", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Booking_id", id);
+
+            connection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                book.Booking_id = Convert.ToInt32(reader["Booking_id"]);
+                book.User_id = Convert.ToInt32(reader["User_id"]);
+                book.Cat_type = (reader["Cat_type"]).ToString();
+                book.Movie_name = (reader["Movie_name"]).ToString();
+                book.No_of_Tickets = Convert.ToInt32(reader["No_of_Tickets"]);
+                book.amount = Convert.ToInt32(reader["Amount"]);
+            }
+
+            reader.Close();
+            connection.Close();
+
+            return View(book);
         }
 
         // POST: Booking/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id, Booking book)
         {
             try
             {
                 // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                string connectionString = ConfigurationManager.ConnectionStrings["dbconnection"].ToString();
+                SqlConnection connection = new SqlConnection(connectionString);
+                SqlCommand cmd = new SqlCommand("Delete_Booking", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                cmd.Parameters.AddWithValue("@Booking_id", id);
+                int i = cmd.ExecuteNonQuery();
+                connection.Close();
+                if (i > 0)
+                {
+                    ViewBag.Message = "Delete Succssfully";
+                }
+                return View(book);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.Error = ex + " Delete Failed";
+                return View(book);
             }
         }
     }

@@ -191,11 +191,13 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Category\Create.cshtml" />
-    <Content Include="Views\Login\Create.cshtml" />
     <Content Include="Views\Movie\Create.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Booking\Create.cshtml" />
     <Content Include="Views\Booking\Details.cshtml" />
+    <Content Include="Views\Booking\Delete.cshtml" />
+    <Content Include="Views\Booking\Edit.cshtml" />
+    <Content Include="Views\Login\Create.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
