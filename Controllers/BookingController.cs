@@ -280,35 +280,76 @@ namespace Movie_Management_System.Controllers
         [HttpPost]
         public ActionResult Edit(Booking book)
         {
+
             try
             {
                 if (ModelState.IsValid)
                 {
-                    string connectionString = ConfigurationManager.ConnectionStrings["dbconnection"].ToString();
-                    SqlConnection connection = new SqlConnection(connectionString);
-                    SqlCommand cmd = new SqlCommand("Update_Booking", connection);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@Booking_id", book.Booking_id);
-                    cmd.Parameters.AddWithValue("@User_id", Get_User_id());
-                    cmd.Parameters.AddWithValue("@Cat_id", book.Cat_id);
-                    cmd.Parameters.AddWithValue("@Movie_id", book.Movie_id);
-                    cmd.Parameters.AddWithValue("@no_of_Tickets", book.No_of_Tickets);
-                    cmd.Parameters.AddWithValue("@amount", book.amount);
-                    int i = cmd.ExecuteNonQuery();
-                    connection.Close();
-                    if (i > 0)
+                    string connectionString =
+                        ConfigurationManager.ConnectionStrings["dbconnection"].ToString();
+
+                    // Calculate amount again using the selected movie
+                    // and the new number of tickets.
+                    book.amount = Calculate_Price(
+                        book.Movie_id,
+                        book.No_of_Tickets
+                    );
+
+                    using (SqlConnection connection =
+                           new SqlConnection(connectionString))
                     {
-                        ViewBag.Message = "Booking Update Successfully";
-                        return View(book);
+                        SqlCommand cmd =
+                            new SqlCommand("Update_Booking", connection);
+
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue(
+                            "@Booking_id",
+                            book.Booking_id);
+
+                        cmd.Parameters.AddWithValue(
+                            "@User_id",
+                            Get_User_id());
+
+                        cmd.Parameters.AddWithValue(
+                            "@Cat_id",
+                            book.Cat_id);
+
+                        cmd.Parameters.AddWithValue(
+                            "@Movie_id",
+                            book.Movie_id);
+
+                        cmd.Parameters.AddWithValue(
+                            "@no_of_Tickets",
+                            book.No_of_Tickets);
+
+                        cmd.Parameters.AddWithValue(
+                            "@amount",
+                            book.amount);
+
+                        connection.Open();
+
+                        int i = cmd.ExecuteNonQuery();
+
+                        connection.Close();
+
+                        if (i > 0)
+                        {
+                            ViewBag.Message =
+                                "Booking Update Successfully";
+                        }
                     }
+
+                    ViewBag.TotalPrice = book.amount;
+
+                    return View(book);
                 }
 
                 return View(book);
             }
             catch (Exception ex)
             {
-                ViewBag.Error = ex + " Updation Failed";
+                ViewBag.Error = ex.Message + " Updation Failed";
                 return View(book);
             }
         }
