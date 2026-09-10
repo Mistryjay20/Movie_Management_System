@@ -5,15 +5,14 @@ using System.Web;
 
 namespace Movie_Management_System.Models
 {
-    public class user
+    public class User
     {
-        public int User_id { get; set; }
-        public string User_name { get; set; }
-        public string Email_id { get; set; }
-        public string User_password { get; set;}
-        public string City { get; set;}
-        public int PhoneNo { get; set;}
+        public int user_id { get; set; }
+        public string user_name { get; set; }
+        public string email_id { get; set; }
+        public string user_password { get; set; }
+        public string city { get; set; }
+        public string phoneno { get; set; }
 
-    
     }
 }
